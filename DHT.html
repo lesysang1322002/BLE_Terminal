@@ -54,8 +54,10 @@
     </nav>
     <div class="custom-border container">
         <h4 class="text-center mt-2"><strong>DHT BLE</strong></h4>
+        <h6 class="text-center mt-2">Service UUID: 0000180f-0000-1000-8000-00805f9b34fb</h6>
         <hr>
         <div class="container">
+        <h6 class="text-center mt-2">Characteristic UUID: 00002a19-0000-1000-8000-00805f9b34fb</h6>
         <div class="row text-center">
             <div class="card card-body m-3 col-5.3">
                <h6>Nhiệt độ</h6>
@@ -81,8 +83,8 @@
                 </div>
                 <div class="row">
                 <div class="form-check form-check-inline ml-3">
-                    <input type="checkbox" class="form-check-input" id="myCheckbox" onchange="performFunction()">
-                    <label class="form-check-label" for="myCheckbox">Show</label>
+                    <input type="checkbox" class="form-check-input" id="Checkauto" onchange="Checkautoscroll()">
+                    <label class="form-check-label" for="myCheckbox">Autoscroll</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input type="checkbox" class="form-check-input" id="Checkbox" onchange="Checkshowtime()">
@@ -120,10 +122,8 @@
             if(isWebBluetoothEnabled){
         log1('FINDING...');
         navigator.bluetooth.requestDevice({
-            filters: [{
-                name: deviceName
-            }],
-            optionalServices: ['battery_service'] 
+            filters:[{
+            services: ['battery_service']}]
             })         
         .then(device => {
             dev=device;
@@ -165,38 +165,18 @@
         window.onload = function() {
             alert('Hãy nhấn nút SCAN để bắt đầu tìm kiếm thiết bị Blutooth');
         };
-        // function Autoscroll() {
-        //     gattCharacteristic.startNotifications()
-        //     .then(_ => {
-        //         console.log('Start reading...');
-        //         //log('Kết nối thành công với Serial Monitor...');
-        //         // document.querySelector('#start').disabled = true;
-        //         // document.querySelector('#stop').disabled = false;
-        //     })
-        //     .catch(error => {
-        //         console.log('[ERROR] Start: ' + error);
-        //         log('[ERROR] Start: ' + error);
-        //     })
-        // }
+        function scrollToBottom() {
+        var textarea = document.getElementById("textareaNotification");
+        textarea.scrollTop = textarea.scrollHeight;
+        }
 
-        // function Unautoscroll() {
-        //     gattCharacteristic.stopNotifications().then(_ => {
-        //         console.log('Đã ngắt kết nối với Serial Monitor...');
-        //        // log('Đã ngắt kết nối với Serial Monitor...');
-        //         // document.querySelector('#start').disabled = false;
-        //         // document.querySelector('#stop').disabled = true;
-        //     })
-        //     .catch(error => {
-        //         console.log('[ERROR] Stop: ' + error);
-        //     })
-        // }
-        let checklog;
-        function performFunction() {
-            const checkbox = document.getElementById("myCheckbox");
+        let checkautoscroll;
+        function Checkautoscroll() {
+            const checkbox = document.getElementById("Checkauto");
             if (checkbox.checked) {
-                checklog=true;
+                checkautoscroll=true;
             } else {
-                checklog=false;
+                checkautoscroll=false;
             }
         }
         let check;
@@ -237,17 +217,17 @@
         var now = new Date();
         console.log(' -> ' + now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds() + valueString);
         $('#battery_level').text(valueString);
-        log(valueString );}
+        log(valueString );
+        if(checkautoscroll) scrollToBottom();
+    }
     }
     //Hiển thị văn bản
     function log(text) {
-            if(checklog){
             const now = new Date();
             const prefixlog = now.getHours() + ':' + now.getMinutes() + ':'  + now.getSeconds() + ' -> ';
 
            if(check) $('.text-log').val($('.text-log').val() + prefixlog + text );
            else  $('.text-log').val($('.text-log').val() + text);
-        }
         }
     let isScanning = true;
     function toggleFunction() {
