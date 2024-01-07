@@ -122,8 +122,10 @@
             if(isWebBluetoothEnabled){
         log1('FINDING...');
         navigator.bluetooth.requestDevice({
-            filters:[{
-            services: ['battery_service']}]
+            filters: [{
+                name: deviceName
+            }],
+            optionalServices: ['battery_service'] 
             })         
         .then(device => {
             dev=device;
@@ -188,7 +190,6 @@
                check=false;
             }
         }
-        
         function handleChangedValue(event) {
         let data = event.target.value;
         let i=0;
